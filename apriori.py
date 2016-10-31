@@ -1,3 +1,7 @@
+from operator import add
+from functools import reduce
+from collections import Counter
+
 def preprocessing(data):
     """ preprocesses data to be applicable to apriori
     
@@ -60,7 +64,8 @@ class apriori():
     
     def _construct_and_count(self, j, frequent_tuples):
         if j == 1:
-            # count items ind baskets and return
+            item_counts = reduce(add, map(Counter, self.baskets))
+            return item_counts
         if j > 1:
             # for every basket, filter tuples subset of basket
             # double loop through filtered tuples
