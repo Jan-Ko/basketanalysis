@@ -62,7 +62,7 @@ class Apriori():
     def _filter(self):
         pass
 
-    def _construct_and_count(self, j, frequent_tuples):
+    def _construct_and_count(baskets, frequent_itemsets, j):
         if j == 1:
             item_counts = reduce(add, map(Counter, self.baskets))
             return item_counts
@@ -73,4 +73,37 @@ class Apriori():
             # if count(unison) = j add tuple to output and increase count
             pass
 
-   #memoization?
+def baskets_items_counts(baskets):
+    """ Constructs the item counts of the items over all baskets
+
+
+    Parameters
+    ----------
+    baskets : list of sets
+        each basket is a set of items
+
+    Returns
+    ----------
+    counts : Counter object
+        each key is a frozenset constructed from all the items in any set of baskets
+    """
+    pass
+
+def freq_itemsets_per_basket(basket, freq_itemsets, itemset_size):
+    """ Constructs frequent item sets of a basket
+
+    For a given basket coming from the frequent item sets each of size itemset_size-1 the frequent item sets of size itemset_size are constructed
+
+    Parameters
+    ----------
+    basket : sets
+    freq_itemsets : Counter of frozensets
+        contains frequent items, each of length itemset_size-1, as keys and their corresponding counts
+    itemset_size : size of the frequent items to compute
+
+    Returns:
+    ----------
+    frequent : Counter of frozensets
+        contains the frequent items in basket of size itemset_size as keys. The corresponding count is set to 1.
+    """
+    pass
