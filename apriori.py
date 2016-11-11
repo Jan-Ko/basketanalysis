@@ -124,6 +124,10 @@ def freq_itemsets_per_basket(basket, freq_itemsets, itemset_size):
     frequent : Counter of frozensets
         contains the frequent items in basket of size itemset_size as keys.
         The corresponding count is set to 1.
+
+    Raises
+    ---------
+    ValueError : if itemset_size is less than 2
     """
     if itemset_size < 2:
         raise ValueError("itemset_size needs to be at least 2")
