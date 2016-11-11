@@ -1,6 +1,7 @@
 from operator import add
 from functools import reduce
 from collections import Counter
+from itertools import combinations
 
 
 def preprocessing(data):
@@ -111,8 +112,8 @@ def freq_itemsets_per_basket(basket, freq_itemsets, itemset_size):
     itemset_size-1 the frequent item sets of size itemset_size are constructed
 
     Parameters
-    ----------git
-    basket : sets
+    ----------
+    basket : set
     freq_itemsets : Counter of frozensets
         contains frequent items, each of length itemset_size-1, as keys and
         their corresponding counts
@@ -124,4 +125,17 @@ def freq_itemsets_per_basket(basket, freq_itemsets, itemset_size):
         contains the frequent items in basket of size itemset_size as keys.
         The corresponding count is set to 1.
     """
-    pass
+    if itemset_size < 2:
+        raise ValueError("itemset_size needs to be at least 2")
+    keys_in_basket = {
+        key for key in freq_itemsets.keys() if key.issubset(basket)
+        }
+    k_combs = Counter(x.union(y) for x, y in combinations(keys_in_basket, 2)
+                      if len(x & y) == itemset_size-2 and
+                      len(x | y) == itemset_size
+                      )
+    frequent = Counter(
+        key for key, value in k_combs.items() if value ==
+        (itemset_size-1)*itemset_size/2
+        )
+    return frequent
