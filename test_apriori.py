@@ -2,19 +2,20 @@ import unittest
 import apriori
 from collections import Counter
 
+
 class BasketsToItemsTestCase(unittest.TestCase):
     """ Test cases fot the basktes_items_counts function
     """
     def setUp(self):
         self.baskets = [
-            {'a','b','c','d'},
-            {'a','c','d'}
+            {'a', 'b', 'c', 'd'},
+            {'a', 'c', 'd'}
         ]
         self.counts = Counter({
-                        frozenset({'a'}):2,
-                        frozenset({'b'}):1,
-                        frozenset({'c'}):2,
-                        frozenset({'d'}):2
+                        frozenset({'a'}): 2,
+                        frozenset({'b'}): 1,
+                        frozenset({'c'}): 2,
+                        frozenset({'d'}): 2
                         })
 
     def test_baskets_items_counts(self):
@@ -24,76 +25,86 @@ class BasketsToItemsTestCase(unittest.TestCase):
         self.assertEqual(apriori.baskets_items_counts(self.baskets), expected)
 
     def test_baskets_items_counts_empty_list(self):
-        """ Tests the empty list edge case
+        """ Tests empty list edge cases
         """
         expected = Counter()
         self.assertEqual(apriori.baskets_items_counts([]), expected)
+        self.assertEqual(apriori.baskets_items_counts([{}, {}]), expected)
+
 
 class CombFreqItemsOfBasketTestCase(unittest.TestCase):
     """ Test cases for the construction of frequent items for a basket
     """
 
     def setUp(self):
-        self.basket = {'a','b','c','d'}
+        self.basket = {'a', 'b', 'c', 'd'}
         self.freq_items_edge_case = Counter()
-        self.freq_items_1item = Counter({frozenset({'a'}):1})
-        self.freq_items_2items_ct1 = Counter({frozenset({'a'}):1,
-                                              frozenset({'b'}):1
+        self.freq_items_1item = Counter({frozenset({'a'}): 1})
+        self.freq_items_2items_ct1 = Counter({frozenset({'a'}): 1,
+                                              frozenset({'b'}): 1
                                               })
-        self.freq_items_2items_ct2 = Counter({frozenset({'a'}):2,
-                                              frozenset({'b'}):2
+        self.freq_items_2items_ct2 = Counter({frozenset({'a'}): 2,
+                                              frozenset({'b'}): 2
                                               })
-        self.freq_items_2items_1inbasket = Counter({frozenset({'a'}):1,
-                                                    frozenset({'e'}):1
+        self.freq_items_2items_1inbasket = Counter({frozenset({'a'}): 1,
+                                                    frozenset({'e'}): 1
                                                     })
-        self.freq_items_3items_2inbasket = Counter({frozenset({'a'}):1,
-                                                    frozenset({'b'}):1,
-                                                    frozenset({'e'}):1
+        self.freq_items_3items_2inbasket = Counter({frozenset({'a'}): 1,
+                                                    frozenset({'b'}): 1,
+                                                    frozenset({'e'}): 1
                                                     })
-        self.freq_items_all_single_items = Counter({frozenset({'a'}):1,
-                                             frozenset({'b'}):1,
-                                             frozenset({'c'}):1,
-                                             frozenset({'d'}):1
-                                             })
-        self.freq_items_3pairs = Counter({frozenset({'a','b'}):1,
-                                          frozenset({'a','c'}):1,
-                                          frozenset({'b','c'}):1
+        self.freq_items_all_single_items = Counter({frozenset({'a'}): 1,
+                                                    frozenset({'b'}): 1,
+                                                    frozenset({'c'}): 1,
+                                                    frozenset({'d'}): 1
+                                                    })
+        self.freq_items_3pairs = Counter({frozenset({'a', 'b'}): 1,
+                                          frozenset({'a', 'c'}): 1,
+                                          frozenset({'b', 'c'}): 1
                                           })
-        self.freq_items_5_pairs = Counter({frozenset({'a','b'}):1,
-                                          frozenset({'a','c'}):1,
-                                          frozenset({'b','c'}):1,
-                                          frozenset({'b','d'}):1,
-                                          frozenset({'c','d'}):1
-                                          })
-        self.freq_items_4triples = Counter({frozenset({'a','b','c'}):1,
-                                            frozenset({'a','b','d'}):1,
-                                            frozenset({'a','c','d'}):1,
-                                            frozenset({'b','c','d'}):1
+        self.freq_items_5_pairs = Counter({frozenset({'a', 'b'}): 1,
+                                           frozenset({'a', 'c'}): 1,
+                                           frozenset({'b', 'c'}): 1,
+                                           frozenset({'b', 'd'}): 1,
+                                           frozenset({'c', 'd'}): 1
+                                           })
+        self.freq_items_4triples = Counter({frozenset({'a', 'b', 'c'}): 1,
+                                            frozenset({'a', 'b', 'd'}): 1,
+                                            frozenset({'a', 'c', 'd'}): 1,
+                                            frozenset({'b', 'c', 'd'}): 1
                                             })
 
     def test_k_not_in_range(self):
         """ Verify that desired itemset sizes less than two raise a ValueError
         """
         with self.assertRaises(ValueError):
-            for itemset_size in range(-1,2):
-                apriori.freq_itemsets_per_basket(self.basket, self.freq_items_2items_ct1, itemset_size)
+            for itemset_size in range(-1, 2):
+                apriori.freq_itemsets_per_basket(self.basket,
+                                                 self.freq_items_2items_ct1,
+                                                 itemset_size)
 
     def test_no_frequent_items_input(self):
         """Test Case for an empty set of frequent items
         """
         expected = Counter()
-        self.assertEqual(apriori.freq_itemsets_per_basket(self.basket, self.freq_items_edge_case, 2), expected)
+        self.assertEqual(
+            apriori.freq_itemsets_per_basket(self.basket,
+                                             self.freq_items_edge_case, 2
+                                             ), expected)
 
     def test_single_frequent_item_input(self):
         """ Verifies that single frequent itemsets return empty Counters
         """
         expected = Counter()
-        self.assertEqual(apriori.freq_itemsets_per_basket(self.basket, self.freq_items_1item, 2), expected)
+        self.assertEqual(
+            apriori.freq_itemsets_per_basket(self.basket,
+                                             self.freq_items_1item, 2
+                                             ), expected)
 
     def test_frequent_items_of_size1_input(self):
         """ Verfies correct output when constructing pairs
         """
-        exptected = Counter({frozenset({'a','b'}):1})
+        exptected = Counter({frozenset({'a', 'b'}): 1})
         self.assertEqual(
             apriori.freq_itemsets_per_basket(
                 self.basket,
@@ -128,9 +139,9 @@ class CombFreqItemsOfBasketTestCase(unittest.TestCase):
             expected
             )
         expected = Counter({
-            frozenset({'a','b'}):1, frozenset({'a','c'}):1,
-            frozenset({'a','d'}):1, frozenset({'b','c'}):1,
-            frozenset({'b','d'}):1, frozenset({'c','d'}):1
+            frozenset({'a', 'b'}): 1, frozenset({'a', 'c'}): 1,
+            frozenset({'a', 'd'}): 1, frozenset({'b', 'c'}): 1,
+            frozenset({'b', 'd'}): 1, frozenset({'c', 'd'}): 1
         })
         self.assertEqual(
             apriori.freq_itemsets_per_basket(
@@ -144,7 +155,7 @@ class CombFreqItemsOfBasketTestCase(unittest.TestCase):
     def test_frequent_pairs_input(self):
         """ Verify that frequent triples are constructed correclty from pairs
         """
-        expected = Counter({frozenset({'a','b','c'}):1})
+        expected = Counter({frozenset({'a', 'b', 'c'}): 1})
         self.assertEqual(
             apriori.freq_itemsets_per_basket(
                 self.basket,
@@ -153,8 +164,8 @@ class CombFreqItemsOfBasketTestCase(unittest.TestCase):
             ),
             expected
             )
-        expected = Counter({frozenset({'a','b','c'}):1,
-                            frozenset({'b','c','d'}):1})
+        expected = Counter({frozenset({'a', 'b', 'c'}): 1,
+                            frozenset({'b', 'c', 'd'}): 1})
         self.assertEqual(
             apriori.freq_itemsets_per_basket(
                 self.basket,
@@ -167,7 +178,7 @@ class CombFreqItemsOfBasketTestCase(unittest.TestCase):
     def test_frequent_triples_input(self):
         """ verify that four tuples are constructed correctly from triples
         """
-        expected = Counter({frozenset({'a','b','c','d'}):1})
+        expected = Counter({frozenset({'a', 'b', 'c', 'd'}): 1})
         self.assertEqual(
             apriori.freq_itemsets_per_basket(
                 self.basket,
