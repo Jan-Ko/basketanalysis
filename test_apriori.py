@@ -212,3 +212,21 @@ class AprioriInstantiaionTestCase(unittest.TestCase):
         baskets = []
         with self.assertRaises(ValueError):
             apriori.Apriori(baskets)
+
+    def test_threshold(self):
+        """ Ensures that threshold is in the desired range
+        """
+        def setUp(self):
+            self.threshs_neg = [-1, -0.5, 1.5]
+            self.threshs_pos = [0, 0.5, 1]
+            self.baskets = [{'a'}]
+
+        def test_threshold(self):
+            for thresh in self.threshs_pos:
+                apr = apriori.Apriori(self.baskets, threshold=thresh)
+                self.assertEqual(apr.threshold, thresh)
+                self.assertEqual(apr.bbaskets, self.baskets)
+
+            for thresh in self.threshs_neg:
+                with self.self.assertRaises(ValueError):
+                    apriori.Apriori(self.baskets, thresh)
