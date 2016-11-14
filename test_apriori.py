@@ -230,3 +230,30 @@ class AprioriInstantiaionTestCase(unittest.TestCase):
             for thresh in self.threshs_neg:
                 with self.self.assertRaises(ValueError):
                     apriori.Apriori(self.baskets, thresh)
+
+
+class FilterFrequentItemTestCase(unittest.Testcase):
+    """ Provides tests for filtering frequent items according to a threshold
+    """
+    def setUp(self):
+        self.frequent_standard = Counter({frozenset({'b'}): 0,
+                                          frozenset({'c'}): 0.5,
+                                          frozenset({'e'}): 0.9})
+        self.frequent_empty = Counter()
+
+    def test_filter_frequent_standard_case(self):
+        threshs = [0, 0.6, 1]
+        expected = [self.frequent_standard, Counter({frozenset({'e'}): 0.9}),
+                    Counter()]
+        for thresh, exp in zip(threshs, expected):
+            self.assertEqual(exp,
+                             apriori.filter_frequent(self.frequent_standard,
+                                                     thresh)
+                             )
+
+    def test_frequent_empty_case(self):
+        thresh = 0.5
+        expected = Counter
+        self.assertEqual(expected,
+                         apriori.filter_frequent(self.frequent_empty, thresh)
+                         )
