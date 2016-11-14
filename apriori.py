@@ -29,8 +29,13 @@ class Apriori():
                    determine frequent item sets up to max_set_size items
                    if None, determine alls frequent item sets
 
-    threshold : real number >= 0 <=1
+    threshold : real number >= 0 and <=1
         minimum threshold for item sets to count as frequent
+
+    Raises
+    ----------
+    ValueError : if baskets is an empty list or if threshold is not in the
+        interval [0,1]
     """
     def __init__(self, baskets, max_set_size=None, threshold=0.1):
         if baskets == []:
