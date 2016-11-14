@@ -232,7 +232,7 @@ class AprioriInstantiaionTestCase(unittest.TestCase):
                     apriori.Apriori(self.baskets, thresh)
 
 
-class FilterFrequentItemTestCase(unittest.Testcase):
+class FilterFrequentItemTestCase(unittest.TestCase):
     """ Provides tests for filtering frequent items according to a threshold
     """
     def setUp(self):
