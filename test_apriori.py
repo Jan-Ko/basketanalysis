@@ -187,3 +187,28 @@ class CombFreqItemsOfBasketTestCase(unittest.TestCase):
             ),
             expected
             )
+
+
+class AprioriInstantiaionTestCase(unittest.TestCase):
+    """ Testcases for initialization of the apriori class
+    """
+    def test_regular_case(self):
+        """ standard positive case
+        """
+        baskets = [{'a', 'b'},
+                   {'a'}]
+        max_set_size = 2
+        threshold = 0.5
+        cls = apriori.Apriori(
+            baskets=baskets, max_set_size=max_set_size, threshold=threshold
+            )
+        self.assertEqual(baskets, cls.baskets)
+        self.assertEqual(max_set_size, self.max_set_size)
+        self.assertEqual(threshold, self.threshold)
+
+    def test_empty_basket_case(self):
+        """ Ensure ValueError when passing empty baskets
+        """
+        baskets = []
+        with self.assertRaises(ValueError):
+            apriori.Apriori(baskets)
