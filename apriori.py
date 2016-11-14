@@ -35,6 +35,8 @@ class Apriori():
     def __init__(self, baskets, max_set_size=None, threshold=0.1):
         if baskets == []:
             raise ValueError("baskets must not be an empty list")
+        if threshold > 1 or threshold < 0:
+            raise ValueError("threshold must be in the range [0,1]")
 
         self.baskets = baskets
         self.max_set_size = max_set_size
