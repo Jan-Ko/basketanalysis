@@ -203,8 +203,8 @@ class AprioriInstantiaionTestCase(unittest.TestCase):
             baskets=baskets, max_set_size=max_set_size, threshold=threshold
             )
         self.assertEqual(baskets, cls.baskets)
-        self.assertEqual(max_set_size, self.max_set_size)
-        self.assertEqual(threshold, self.threshold)
+        self.assertEqual(max_set_size, max_set_size)
+        self.assertEqual(threshold, threshold)
 
     def test_empty_basket_case(self):
         """ Ensure ValueError when passing empty baskets
