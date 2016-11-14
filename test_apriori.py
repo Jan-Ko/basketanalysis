@@ -254,7 +254,7 @@ class FilterFrequentItemTestCase(unittest.TestCase):
 
     def test_frequent_empty_case(self):
         thresh = 2
-        expected = Counter
+        expected = Counter()
         self.assertEqual(expected,
                          apriori.filter_frequent(self.frequent_empty, thresh)
                          )
