@@ -138,3 +138,23 @@ def freq_itemsets_per_basket(basket, freq_itemsets, itemset_size):
         (itemset_size-1)*itemset_size/2
         )
     return frequent
+
+
+def filter_frequent(counted_items, threshold):
+        """ Filters a counter object according to a threshold
+
+        Parameters
+        ----------
+        counted_items : Counter of items
+        threshold : real number
+            items with count > threshold will be kept
+
+        Returns
+        ----------
+        frequent_items : Counter of items
+        """
+        frequent_items = Counter(
+            {key: value for key, value in counted_items.items()
+             if value >= threshold}
+            )
+        return frequent_items
