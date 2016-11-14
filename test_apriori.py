@@ -237,13 +237,14 @@ class FilterFrequentItemTestCase(unittest.TestCase):
     """
     def setUp(self):
         self.frequent_standard = Counter({frozenset({'b'}): 0,
-                                          frozenset({'c'}): 0.5,
-                                          frozenset({'e'}): 0.9})
+                                          frozenset({'e'}): 2})
         self.frequent_empty = Counter()
 
     def test_filter_frequent_standard_case(self):
-        threshs = [0, 0.6, 1]
-        expected = [self.frequent_standard, Counter({frozenset({'e'}): 0.9}),
+        threshs = [-1, 0, 1, 3]
+        expected = [self.frequent_standard,
+                    self.frequent_standard,
+                    Counter({frozenset({'e'}): 2}),
                     Counter()]
         for thresh, exp in zip(threshs, expected):
             self.assertEqual(exp,
@@ -252,7 +253,7 @@ class FilterFrequentItemTestCase(unittest.TestCase):
                              )
 
     def test_frequent_empty_case(self):
-        thresh = 0.5
+        thresh = 2
         expected = Counter
         self.assertEqual(expected,
                          apriori.filter_frequent(self.frequent_empty, thresh)
