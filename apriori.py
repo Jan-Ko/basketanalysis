@@ -48,31 +48,6 @@ class Apriori():
         self.threshold = threshold
         self.baskets_length = len(self.baskets)
 
-    def compute(self):
-        """ Applies the apriori algorithm to baskets
-        """
-        pass
-
-    def _initialize(self):
-        pass
-
-    def _construct(self):
-        pass
-
-    def _filter(self):
-        pass
-
-    def _construct_and_count(self, baskets, frequent_itemsets, j):
-        if j == 1:
-            item_counts = reduce(add, map(Counter, self.baskets))
-            return item_counts
-        if j > 1:
-            # for every basket, filter tuples subset of basket
-            # double loop through filtered tuples
-                # if tuple difference is j-2, unite and count unison
-            # if count(unison) = j add tuple to output and increase count
-            pass
-
 
 def baskets_items_counts(baskets):
     """ Constructs the item counts of the items over all baskets
