@@ -46,6 +46,7 @@ class Apriori():
         self.baskets = baskets
         self.max_set_size = max_set_size
         self.threshold = threshold
+        self.baskets_length = len(self.baskets)
 
     def compute(self):
         """ Applies the apriori algorithm to baskets
