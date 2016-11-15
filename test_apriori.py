@@ -260,3 +260,20 @@ class FilterFrequentItemTestCase(unittest.TestCase):
         self.assertEqual(expected,
                          apriori.filter_frequent(self.frequent_empty, thresh)
                          )
+
+
+class IntegrationTestCase(unittest.TestCase):
+    """ Tests for frequent itemsets mining
+    """
+    def setUp(self):
+        self.baskets = [{'a', 'b'},
+                        {'a'},
+                        {'a', 'b', 'c'}]
+        self.thresh = 0.5
+        self.apr = apriori.Apriori(self.baskets, threshold=self.thresh)
+
+    def test_frequent_item_set_mining(self):
+        expected = Counter({frozenset({'a'}): 3,
+                            frozenset({'b'}): 2,
+                            frozenset({'a', 'b'}): 2})
+        self.assertEqual(expected, self.apr.mine())
