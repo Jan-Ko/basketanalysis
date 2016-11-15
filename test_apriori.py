@@ -198,13 +198,15 @@ class AprioriInstantiaionTestCase(unittest.TestCase):
         baskets = [{'a', 'b'},
                    {'a'}]
         max_set_size = 2
+        baskets_length = 2
         threshold = 0.5
         cls = apriori.Apriori(
             baskets=baskets, max_set_size=max_set_size, threshold=threshold
             )
         self.assertEqual(baskets, cls.baskets)
-        self.assertEqual(max_set_size, max_set_size)
-        self.assertEqual(threshold, threshold)
+        self.assertEqual(max_set_size, cls.max_set_size)
+        self.assertEqual(threshold, cls.threshold)
+        self.assertEqual(baskets_length, cls.baskets_length)
 
     def test_empty_basket_case(self):
         """ Ensure ValueError when passing empty baskets
