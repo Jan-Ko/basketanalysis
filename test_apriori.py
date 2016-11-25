@@ -276,4 +276,4 @@ class IntegrationTestCase(unittest.TestCase):
         expected = Counter({frozenset({'a'}): 3,
                             frozenset({'b'}): 2,
                             frozenset({'a', 'b'}): 2})
-        self.assertEqual(expected, self.apr.mine())
+        self.assertEqual(expected, self.apr.mine().frequent_items)

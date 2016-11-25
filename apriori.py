@@ -4,6 +4,7 @@ from collections import Counter
 from itertools import combinations
 
 
+
 def preprocessing(data):
     """ preprocesses data to be applicable to apriori
 
@@ -47,6 +48,26 @@ class Apriori():
         self.max_set_size = max_set_size
         self.threshold = threshold
         self.baskets_length = len(self.baskets)
+
+    def mine(self):
+        """ Produces frequent itemset of baskets
+
+        Returns
+        ---------
+        self : but extended on the frequent items of baskets
+        """
+        self.ctd_thresh = int(self.threshold * self.baskets_length)
+        tmp = []
+        # item counts in tmp[0]
+        tmp.append(baskets_items_counts(self.baskets))
+        tmp.append(filter_frequent(tmp[0], self.ctd_thresh))
+        # per_basket! not for all baskets
+        tmp.append(filter_frequent(
+            freq_itemsets_per_basket(self.baskets, tmp[1], 2),
+            self.ctd_thresh)
+                   )
+        self.frequent_items = Counter(tmp[1:])
+        return self
 
 
 def baskets_items_counts(baskets):
