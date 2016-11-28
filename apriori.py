@@ -2,7 +2,7 @@ from operator import add
 from functools import reduce
 from collections import Counter
 from itertools import combinations
-
+from math import ceil
 
 
 def preprocessing(data):
@@ -56,7 +56,9 @@ class Apriori():
         ---------
         self : but extended on the frequent items of baskets
         """
-        self.ctd_thresh = 2
+        # ceil to avoid zero counts and return only more frequent items than
+        # with floor. (int(1.5)=1)
+        self.ctd_thresh = ceil(self.threshold*len(self.baskets))
         tmp = []
         # item counts in tmp[0]
         tmp.append(baskets_items_counts(self.baskets))
@@ -66,7 +68,8 @@ class Apriori():
             filter_frequent(
                 reduce(
                     add,
-                    (freq_itemsets_per_basket(basket, tmp[1], 2) for basket in
+                    (freq_itemsets_per_basket(basket, tmp[1], 2)
+                     for basket in
                      self.baskets)
                       ),
                 self.ctd_thresh
