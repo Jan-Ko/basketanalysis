@@ -60,21 +60,26 @@ class Apriori():
         # with floor. (int(1.5)=1)
         self.ctd_thresh = ceil(self.threshold*len(self.baskets))
         tmp = []
+        # the theoretical maximal set size is the largest basket
+        if not self.max_set_size:
+            self.max_set_size = max(len(basket) for basket in self.baskets)
+
         # item counts in tmp[0]
         tmp.append(baskets_items_counts(self.baskets))
         tmp.append(filter_frequent(tmp[0], self.ctd_thresh))
         # per_basket! not for all baskets
-        tmp.append(
-            filter_frequent(
-                reduce(
-                    add,
-                    (freq_itemsets_per_basket(basket, tmp[1], 2)
-                     for basket in
-                     self.baskets)
-                      ),
-                self.ctd_thresh
-                            )
-                    )
+        for k in range(2, self.max_set_size + 1):
+            tmp.append(
+                filter_frequent(
+                    reduce(
+                        add,
+                        (freq_itemsets_per_basket(basket, tmp[k-1], k)
+                         for basket in
+                         self.baskets)
+                        ),
+                    self.ctd_thresh
+                                )
+                        )
         self.frequent_items = reduce(add, tmp[1:])
         return self
 
