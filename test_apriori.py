@@ -269,11 +269,28 @@ class IntegrationTestCase(unittest.TestCase):
         self.baskets = [{'a', 'b'},
                         {'a'},
                         {'a', 'b', 'c'}]
-        self.thresh = 0.5
-        self.apr = apriori.Apriori(self.baskets, threshold=self.thresh)
+        self.thresh_mss2 = 0.5
+        self.apr_mss2 = apriori.Apriori(
+            self.baskets, threshold=self.thresh_mss2
+            )
+        self.thresh_mss3 = 0
+        self.apr_mss3 = apriori.Apriori(
+            self.baskets, threshold=self.thresh_mss3
+            )
+        unittest.TestCase.maxDiff = None
 
-    def test_frequent_item_set_mining(self):
+    def test_frequent_item_set_mining_max_set_size2(self):
         expected = Counter({frozenset({'a'}): 3,
                             frozenset({'b'}): 2,
                             frozenset({'a', 'b'}): 2})
-        self.assertEqual(expected, self.apr.mine().frequent_items)
+        self.assertEqual(expected, self.apr_mss2.mine().frequent_items)
+
+    def test_frequent_item_set_mining_max_set_size3(self):
+        expected = Counter({frozenset({'a'}): 3,
+                            frozenset({'b'}): 2,
+                            frozenset({'c'}): 1,
+                            frozenset({'a', 'b'}): 2,
+                            frozenset({'a', 'c'}): 1,
+                            frozenset({'b', 'c'}): 1,
+                            frozenset({'a', 'b', 'c'}): 1})
+        self.assertEqual(expected, self.apr_mss3.mine().frequent_items)
