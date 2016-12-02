@@ -195,25 +195,14 @@ class AprioriInstantiaionTestCase(unittest.TestCase):
     def test_regular_case(self):
         """ standard positive case
         """
-        baskets = [{'a', 'b'},
-                   {'a'}]
         max_set_size = 2
-        baskets_length = 2
         threshold = 0.5
         cls = apriori.Apriori(
-            baskets=baskets, max_set_size=max_set_size, threshold=threshold
+            max_set_size=max_set_size, threshold=threshold
             )
-        self.assertEqual(baskets, cls.baskets)
         self.assertEqual(max_set_size, cls.max_set_size)
         self.assertEqual(threshold, cls.threshold)
-        self.assertEqual(baskets_length, cls.baskets_length)
 
-    def test_empty_basket_case(self):
-        """ Ensure ValueError when passing empty baskets
-        """
-        baskets = []
-        with self.assertRaises(ValueError):
-            apriori.Apriori(baskets)
 
     def test_threshold(self):
         """ Ensures that threshold is in the desired range
@@ -271,11 +260,11 @@ class IntegrationTestCase(unittest.TestCase):
                         {'a', 'b', 'c'}]
         self.thresh_mss2 = 0.5
         self.apr_mss2 = apriori.Apriori(
-            self.baskets, threshold=self.thresh_mss2
+            threshold=self.thresh_mss2
             )
         self.thresh_mss3 = 0
         self.apr_mss3 = apriori.Apriori(
-            self.baskets, threshold=self.thresh_mss3
+            threshold=self.thresh_mss3
             )
         unittest.TestCase.maxDiff = None
 
@@ -283,7 +272,8 @@ class IntegrationTestCase(unittest.TestCase):
         expected = Counter({frozenset({'a'}): 3,
                             frozenset({'b'}): 2,
                             frozenset({'a', 'b'}): 2})
-        self.assertEqual(expected, self.apr_mss2.mine().frequent_items)
+        fitted = self.apr_mss2.fit(self.baskets)
+        self.assertEqual(expected, fitted.frequent_items)
 
     def test_frequent_item_set_mining_max_set_size3(self):
         expected = Counter({frozenset({'a'}): 3,
@@ -293,4 +283,19 @@ class IntegrationTestCase(unittest.TestCase):
                             frozenset({'a', 'c'}): 1,
                             frozenset({'b', 'c'}): 1,
                             frozenset({'a', 'b', 'c'}): 1})
-        self.assertEqual(expected, self.apr_mss3.mine().frequent_items)
+        fitted = self.apr_mss3.fit(self.baskets)
+        self.assertEqual(expected, fitted.frequent_items)
+
+
+class FitEmptyBasketsTestCase(unittest.TestCase):
+    """ Test for fitting empty baskets
+    """
+    def setUp(self):
+        self.apr = apriori.Apriori()
+
+    def test_empty_basket_case(self):
+            """ Ensure ValueError when passing empty baskets
+            """
+            baskets = []
+            with self.assertRaises(ValueError):
+                self.apr.fit(baskets)
