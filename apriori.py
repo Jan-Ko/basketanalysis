@@ -5,27 +5,11 @@ from itertools import combinations
 from math import ceil
 
 
-def preprocessing(data):
-    """ preprocesses data to be applicable to apriori
-
-    Parameters
-    ----------
-    data : tbd
-
-    Returns
-    ---------
-    list of sets
-    """
-    pass
-
-
 class Apriori():
     """ Frequent Itemsets using the apriori algorithm
 
     Parameters
     ----------
-    baskets : list of sets
-
     max_set_size : int, default None
                    determine frequent item sets up to max_set_size items
                    if None, determine alls frequent item sets
@@ -33,54 +17,71 @@ class Apriori():
     threshold : real number >= 0 and <=1
         minimum threshold for item sets to count as frequent
 
+    Attributes
+    ----------
+    frequent_items_ : contains the frequent tuples
+
+    item_counts_ : contains item counts of atoms
+
+    counted_threshold_ : the threshold in counts for the fitted class
+
     Raises
     ----------
-    ValueError : if baskets is an empty list or if threshold is not in the
-        interval [0,1]
+    ValueError : if threshold is not in the interval [0,1]
+
     """
-    def __init__(self, baskets, max_set_size=None, threshold=0.1):
-        if baskets == []:
-            raise ValueError("baskets must not be an empty list")
+    def __init__(self, max_set_size=None, threshold=0.1):
         if threshold > 1 or threshold < 0:
             raise ValueError("threshold must be in the range [0,1]")
 
-        self.baskets = baskets
         self.max_set_size = max_set_size
         self.threshold = threshold
-        self.baskets_length = len(self.baskets)
 
-    def mine(self):
-        """ Produces frequent itemset of baskets
+    def fit(self, baskets):
+        """ Computes the frequent item sets for a list of baskets
+
+        The a priori algorithm is used to compute the frequent item sets
+
+        Parameters
+        ----------
+        baskets : list of sets
 
         Returns
         ---------
-        self : but extended on the frequent items of baskets
+        self :
+
+        Raises
+        ----------
+        ValueError : if baskets is an empty list
         """
-        # ceil to avoid zero counts and return only more frequent items than
-        # with floor. (int(1.5)=1)
-        self.ctd_thresh = ceil(self.threshold*len(self.baskets))
-        tmp = []
+        if baskets == []:
+            raise ValueError("baskets must not be an empty list")
+        baskets_length = len(baskets)
         # the theoretical maximal set size is the largest basket
         if not self.max_set_size:
-            self.max_set_size = max(len(basket) for basket in self.baskets)
+            self.max_set_size = max(len(basket) for basket in baskets)
+        # ceil to avoid zero counts and return only more frequent items than
+        # with floor. (int(1.5)=1)
+        self.counted_threshold_ = ceil(self.threshold*baskets_length)
 
-        # item counts in tmp[0]
-        tmp.append(baskets_items_counts(self.baskets))
-        tmp.append(filter_frequent(tmp[0], self.ctd_thresh))
-        # per_basket! not for all baskets
-        for k in range(2, self.max_set_size + 1):
-            tmp.append(
-                filter_frequent(
-                    reduce(
-                        add,
-                        (freq_itemsets_per_basket(basket, tmp[k-1], k)
-                         for basket in
-                         self.baskets)
-                        ),
-                    self.ctd_thresh
-                                )
-                        )
-        self.frequent_items = reduce(add, tmp[1:])
+        # set_size == 0
+        self.item_counts_ = baskets_items_counts(baskets)
+        tmp_items = []
+        tmp_items.append(
+            filter_frequent(self.item_counts_, self.counted_threshold_)
+            )
+        # set_size > 0
+        for current_set_size in range(1, self.max_set_size):
+            per_basket = (freq_itemsets_per_basket(
+                            basket, tmp_items[current_set_size-1],
+                            current_set_size+1)
+                          for basket in baskets)
+            frequent = filter_frequent(reduce(add, per_basket),
+                                       self.counted_threshold_
+                                       )
+            tmp_items.append(frequent)
+        # aggregate the individual information to a single counter object
+        self.frequent_items_ = reduce(add, tmp_items)
         return self
 
 
