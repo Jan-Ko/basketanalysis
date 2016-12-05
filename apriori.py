@@ -57,7 +57,7 @@ class Apriori():
         if baskets == []:
             raise ValueError("baskets must not be an empty list")
         baskets_length = len(baskets)
-        # the theoretical maximal set size is the largest basket
+        # an upper bound of the maximal set size is the largest basket
         if not self.max_set_size:
             self.max_set_size = max(len(basket) for basket in baskets)
         # ceil to avoid zero counts and return only more frequent items than
