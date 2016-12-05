@@ -265,16 +265,26 @@ class IntegrationTestCase(unittest.TestCase):
         self.apr_mss3 = apriori.Apriori(
             threshold=self.thresh_mss3
             )
+        self.thresh_mss4 = 0
+        self.apr_mss4 = apriori.Apriori(
+            max_set_size=1,
+            threshold=self.thresh_mss4
+            )
+        self.thresh_mss5 = 0.5
+        self.apr_mss5 = apriori.Apriori(
+            max_set_size=1,
+            threshold=self.thresh_mss5
+            )
         unittest.TestCase.maxDiff = None
 
-    def test_frequent_item_set_mining_max_set_size2(self):
+    def test_frequent_item_set_mining_thesh_half(self):
         expected = Counter({frozenset({'a'}): 3,
                             frozenset({'b'}): 2,
                             frozenset({'a', 'b'}): 2})
         fitted = self.apr_mss2.fit(self.baskets)
         self.assertEqual(expected, fitted.frequent_items_)
 
-    def test_frequent_item_set_mining_max_set_size3(self):
+    def test_frequent_item_set_mining_thresh_zero(self):
         expected = Counter({frozenset({'a'}): 3,
                             frozenset({'b'}): 2,
                             frozenset({'c'}): 1,
@@ -283,6 +293,19 @@ class IntegrationTestCase(unittest.TestCase):
                             frozenset({'b', 'c'}): 1,
                             frozenset({'a', 'b', 'c'}): 1})
         fitted = self.apr_mss3.fit(self.baskets)
+        self.assertEqual(expected, fitted.frequent_items_)
+
+    def test_frequent_item_set_mining_max_set_one(self):
+        expected = Counter({frozenset({'a'}): 3,
+                            frozenset({'b'}): 2,
+                            frozenset({'c'}): 1})
+        fitted = self.apr_mss4.fit(self.baskets)
+        self.assertEqual(expected, fitted.frequent_items_)
+
+    def test_frequent_item_set_mining_max_set_one_thresh_above(self):
+        expected = Counter({frozenset({'a'}): 3,
+                            frozenset({'b'}): 2})
+        fitted = self.apr_mss5.fit(self.baskets)
         self.assertEqual(expected, fitted.frequent_items_)
 
 
