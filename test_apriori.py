@@ -203,7 +203,6 @@ class AprioriInstantiaionTestCase(unittest.TestCase):
         self.assertEqual(max_set_size, cls.max_set_size)
         self.assertEqual(threshold, cls.threshold)
 
-
     def test_threshold(self):
         """ Ensures that threshold is in the desired range
         """
@@ -273,7 +272,7 @@ class IntegrationTestCase(unittest.TestCase):
                             frozenset({'b'}): 2,
                             frozenset({'a', 'b'}): 2})
         fitted = self.apr_mss2.fit(self.baskets)
-        self.assertEqual(expected, fitted.frequent_items)
+        self.assertEqual(expected, fitted.frequent_items_)
 
     def test_frequent_item_set_mining_max_set_size3(self):
         expected = Counter({frozenset({'a'}): 3,
@@ -284,7 +283,7 @@ class IntegrationTestCase(unittest.TestCase):
                             frozenset({'b', 'c'}): 1,
                             frozenset({'a', 'b', 'c'}): 1})
         fitted = self.apr_mss3.fit(self.baskets)
-        self.assertEqual(expected, fitted.frequent_items)
+        self.assertEqual(expected, fitted.frequent_items_)
 
 
 class FitEmptyBasketsTestCase(unittest.TestCase):
